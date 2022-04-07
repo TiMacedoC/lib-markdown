@@ -4,7 +4,9 @@ const print = require('./colorLog')
 
 async function cliRum() {
     const caminho = process.argv
-    print(await pegaArquivo(caminho[2]), "cyan")
+    const resultado = await pegaArquivo(caminho[2])
+
+    print(resultado, "cyan")
 }
 
 cliRum()

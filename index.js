@@ -15,7 +15,6 @@ async function pegaArquivo(caminho) {
 
     //Recebe um array com todos os arquivos que estão nessa pasta
     const arquivos = await fs.promises.readdir(caminhoAbsoluto, encoding)
-    console.log('arquivos:', arquivos)
 
     //Verifica se tem algum arquivo de texto ".md" ou ".txt"
     const onlyTextFiles = arquivos.filter((fileName) => {
@@ -27,8 +26,6 @@ async function pegaArquivo(caminho) {
         const response = []
         for (file of onlyTextFiles) {
             const caminhoFinal = path.join(caminho, file)
-            console.log('caminhoFinal:', caminhoFinal)
-
             try {
                 const texto = await fs.promises.readFile(caminhoFinal, encoding)
                 const links = await extraiLinks(texto)
@@ -59,7 +56,6 @@ async function extraiLinks(texto) {
         const linkStatus = await axiosGet(temp[2])
         arrayResultados.push({ title: temp[1], link: temp[2], status: linkStatus })
     }
-    console.log('arrayResultados:', arrayResultados)
 
     return arrayResultados.length === 0 ? "nenhum link encontrado" : arrayResultados;
 }
