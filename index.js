@@ -13,36 +13,40 @@ async function pegaArquivo(caminho) {
     print(caminho, "red")
     print(caminhoAbsoluto, "blue")
 
-    //Recebe um array com todos os arquivos que estão nessa pasta
-    const arquivos = await fs.promises.readdir(caminhoAbsoluto, encoding)
+    try {
 
-    //Verifica se tem algum arquivo de texto ".md" ou ".txt"
-    const onlyTextFiles = arquivos.filter((fileName) => {
-        let fileType = fileName.split('.').pop();
-        return (fileType === 'txt' || fileType === 'md')
-    })
+        //Recebe um array com todos os arquivos que estão nessa past
+        const arquivos = await fs.promises.readdir(caminhoAbsoluto, encoding)
 
-    if (onlyTextFiles.length > 0) {
-        const response = []
-        for (file of onlyTextFiles) {
-            const caminhoFinal = path.join(caminho, file)
-            try {
-                const texto = await fs.promises.readFile(caminhoFinal, encoding)
-                const links = await extraiLinks(texto)
 
-                response.push({ File: file, Links: links })
+        //Verifica se tem algum arquivo de texto ".md" ou ".txt"
+        const onlyTextFiles = arquivos.filter((fileName) => {
+            let fileType = fileName.split('.').pop();
+            return (fileType === 'txt' || fileType === 'md')
+        })
 
-            } catch (error) {
-                response.push({ File: file, Error: error })
+        if (onlyTextFiles.length > 0) {
+            const response = []
+            for (file of onlyTextFiles) {
+                const caminhoFinal = path.join(caminho, file)
+                try {
+                    const texto = await fs.promises.readFile(caminhoFinal, encoding)
+                    const links = await extraiLinks(texto)
+
+                    response.push({ File: file, Links: links })
+
+                } catch (error) {
+                    response.push({ File: file, Error: error })
+                }
+
             }
-
+            return response
+        } else {
+            return "Nenhum arquivo de Texto compatível foi encontrado"
         }
-        return response
-    } else {
-        return "Nenhum arquivo de Texto compatível foi encontrado"
+    } catch (erro) {
+        return "Diretório não encontrado"
     }
-
-
 
 }
 module.exports = pegaArquivo
@@ -65,8 +69,9 @@ async function axiosGet(url) {
     try {
         res = await axios.get(url)
         return res.status
+
     } catch (error) {
-        return error
+        return 404
     }
 }
 

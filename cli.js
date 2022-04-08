@@ -9,4 +9,5 @@ async function cliRum() {
     print(resultado, "cyan")
 }
 
+
 cliRum()
