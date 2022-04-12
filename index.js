@@ -14,7 +14,6 @@ async function pegaArquivo(caminho) {
     print(caminhoAbsoluto, "blue")
 
     try {
-
         //Recebe um array com todos os arquivos que estão nessa past
         const arquivos = await fs.promises.readdir(caminhoAbsoluto, encoding)
 
@@ -29,17 +28,12 @@ async function pegaArquivo(caminho) {
             const response = []
             for (file of onlyTextFiles) {
                 const caminhoFinal = path.join(caminho, file)
-                try {
-                    const texto = await fs.promises.readFile(caminhoFinal, encoding)
-                    const links = await extraiLinks(texto)
+                const texto = await fs.promises.readFile(caminhoFinal, encoding)
+                const links = await extraiLinks(texto)
 
-                    response.push({ File: file, Links: links })
-
-                } catch (error) {
-                    response.push({ File: file, Error: error })
-                }
-
+                response.push({ File: file, Links: links })
             }
+
             return response
         } else {
             return "Nenhum arquivo de Texto compatível foi encontrado"
@@ -54,6 +48,7 @@ module.exports = pegaArquivo
 //Recebe o texto e devolve um array com todos os links
 async function extraiLinks(texto) {
     const regex = /\[([^\]]*)\]\((https?:\/\/[^\)]*)\)/gm
+
     const arrayResultados = []
     let temp
     while ((temp = regex.exec(texto)) !== null) {
